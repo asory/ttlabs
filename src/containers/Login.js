@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import logo from "../logo.svg";
 import axios from "axios";
-import { Icon, Button, TextField, Input, InputAdornment } from "@material-ui/core";
-import AccountCircle from '@material-ui/icons/AccountCircle';
+import { Button, Input, InputAdornment } from "@material-ui/core";
+import AccountCircle from "@material-ui/icons/AccountCircle";
+import PropTypes from "prop-types";
+import { Link } from "react-router-dom"
 
-
-export default class login extends Component {
+export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,6 +14,11 @@ export default class login extends Component {
       password: ""
     };
   }
+
+  validateForm() {
+    return this.state.email.length > 0 && this.state.password.length > 0;
+  }
+
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
@@ -33,52 +39,60 @@ export default class login extends Component {
         }
       )
       .then(response => {
-        /* localStorage.setItem("token", response.data.token);
-        localStorage.setItem("user", JSON.stringify(response.data.user));
-         */alert.open({
-          message: "Sesión iniciada",
-          description: "Bienvenido",
-          icon: <Icon type="smile" style={{ color: "#108ee9" }} />
-        });
-        // this.props.history.push("/bookings")
+        alert("Sesión iniciada");
+        localStorage.setItem("token", response.data.sessionTokenBck)
+        localStorage.setItem("user", JSON.stringify(response.data))
+       
 
-        console.log("response",response.data);
       })
-      .catch(error => {});
-      console.log("error",error);
-
+      .catch(error => {
+        alert("ERROR" + error);
+      });
   };
+
+
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <form onSubmit={this.submitHandler}>
-            <TextField
+            <Input
               name="email"
               type="text"
+              color="primary"
               placeholder="Enter Email"
               onChange={this.changeHandler}
               startAdornment={
                 <InputAdornment position="start">
-                  < AccountCircle/>
+                  <AccountCircle />
                 </InputAdornment>
               }
-            ></TextField>
+            ></Input>
             <br />
             <Input
               name="password"
               type="password"
+              color="primary"
               placeholder="Enter Password"
               onChange={this.changeHandler}
             ></Input>
             <br />
+           
+            <Link to="/BookingList">
             <Button variant="contained" color="primary" type="submit">
               LOGIN
             </Button>
+           </Link>
+
           </form>
         </header>
       </div>
     );
   }
 }
+
+Login.propTypes = {
+  email: PropTypes.string,
+  password: PropTypes.string
+};
