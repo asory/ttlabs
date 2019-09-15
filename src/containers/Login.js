@@ -41,13 +41,19 @@ export default class Login extends Component {
       .then(response => {
         alert("Sesión iniciada");
         localStorage.setItem("token", response.data.sessionTokenBck)
-        localStorage.setItem("user", JSON.stringify(response.data))
+        localStorage.setItem("user",response.data)
+      <Redirect to="/BookingList" />
+            
+        localStorage.setItem("user_email", response.data.email)
        
+/*   localStorage.setItem("user2", response.data.map( function(item,index))
+ */ 
 
       })
       .catch(error => {
         alert("ERROR" + error);
       });
+
   };
 
 
@@ -78,13 +84,9 @@ export default class Login extends Component {
               onChange={this.changeHandler}
             ></Input>
             <br />
-           
-            <Link to="/BookingList">
             <Button variant="contained" color="primary" type="submit">
               LOGIN
             </Button>
-           </Link>
-
           </form>
         </header>
       </div>

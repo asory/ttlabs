@@ -8,10 +8,12 @@ const NavBar = ({ params }) => {
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-             Booking GRID {}
+            Booking GRID {}
           </Typography>
           <Link to="/">
-            <Button color="inherit">Logout</Button>
+            <Button color="primary" onClick={localStorage.clear()}>
+              Logout
+            </Button>
           </Link>
         </Toolbar>
       </AppBar>
