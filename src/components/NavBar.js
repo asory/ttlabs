@@ -2,7 +2,7 @@ import React from "react";
 import { AppBar, Toolbar, Button, Typography } from "@material-ui/core";
 import { Link } from "react-router-dom";
 
-const NavBar = ({ params }) => {
+const NavBar= (props) =>{
   return (
     <div style={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -11,7 +11,7 @@ const NavBar = ({ params }) => {
             Booking GRID {}
           </Typography>
           <Link to="/">
-            <Button color="primary" onClick={localStorage.clear()}>
+            <Button color="primary" onClick={props.handleLogout}>
               Logout
             </Button>
           </Link>

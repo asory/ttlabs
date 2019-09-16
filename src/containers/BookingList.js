@@ -1,12 +1,28 @@
-import React from "react";
+import React from 'react';
 import NavBar from "../components/NavBar";
 import MaterialTable from "material-table";
 import axios from "axios";
+import forwardRef from "react"
+import ArrowUpward from '@material-ui/icons/ArrowUpward';
+import Clear from '@material-ui/icons/Clear';
+import FilterList from '@material-ui/icons/FilterList';
+import Search from '@material-ui/icons/Search';
+
+
+const tableIcons = {
+  Filter: () => <FilterList  />,
+  Search: () => <Search  />,
+  ResetSearch: () => <Clear  />,
+  SortArrow: () => <ArrowUpward  />,
+  Clear: () => <Clear  />,
+
+};
+
 
 class BookingList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bookings: [], user: "", isLoading: true , error:false};
+    this.state = { bookings: [], user: "", isLoading:true , error: false };
   }
 
   loadData = () => {
@@ -20,70 +36,72 @@ class BookingList extends React.Component {
             "Content-type": "application/json; charset=UTF-8",
             token: localStorage.getItem("token"),
             app: "APP_BCK",
-            adminemail: localStorage.getItem("user_email")
+            adminemail: localStorage.getItem("email")
           }
-          /* query: { } */
         },
-        console.log("token request", localStorage.getItem("token")),
-        console.log("email request", localStorage.getItem("user_email"),)
-      )
-      .then(response => {
-        console.log("response 1 ", response);
-        return response.json();
-      })
-      .then(json => {
+        )
+      .then(response =>  {
         this.setState({
-		  bookings: JSON.parse(json.map(data =>({label:data.Name,value:data.value}))),
-		  isLoading: false,
-
+          bookings: response.data,
+          isLoading: false
         });
-        console.log("asda", json);
-	  })
-	  .catch(error => {
-		this.setState({
-			isLoading: false,
-            error:true
-		  });
-	  })
+        console.log("asda",response.data);
+      })
+      .catch(err =>{ console.log(err)
+        this.setState({
+            isLoading: false,
+            error: true
+          });
+        });
   };
 
   componentDidMount() {
-	const user = JSON.parse( localStorage.getItem( "user" ) );
-	this.setState( { user } );
-	console.log(user)
+     const user = localStorage.getItem("user");
+    this.setState({ user }); 
     this.loadData();
   }
 
+  
   render() {
-	const { isLoading, error, bookings } = this.state;
+    const { isLoading, error, bookings } = this.state;
     if (isLoading) {
       return <h1>Loading ...</h1>;
     }
     if (error) {
       return (
-		  <div>
-		<NavBar /* name={this.user.firstname} */ />
-        <h1>
-          There was an error loading .{" "}ヾ"("＾∇＾")"
-          <button onClick={this.loadData}>Try again</button>
-        </h1>
-		</div>
+        <div>
+          <NavBar /* name={this.user.firstname} */ />
+          <h1>
+            There was an error loading . ヾ"("＾∇＾")"
+            <button onClick={this.loadData}>Try again</button>
+          </h1>
+        </div>
       );
     }
+  
     return (
-		
+    
       <div>
-        <NavBar /* name={this.user.firstname} */ />
+        <NavBar props={this.props} />
         <MaterialTable
+          icons={tableIcons}
           title="Bookings "
-          columns={[
+                   columns={[
             { title: "BookingID", field: "bookingId" },
-            { title: "Cliente", field: "Name " },
-            { title: "Fecha de Creación", field: "BookingTime", type: "date" },
-            { title: "Dirección", field: "streetAddress" },
-            { title: "bookingPrice", field: "Precio", type: "numeric" }
+            { title: "Clie", field: "lookup" , lookup: { name: "tutenUserClient.firstName",  last: "tutenUserClient.lastName" } },
+            { title:  "nte", field: "tutenUserClient.lastName" , cellStyle: {
+              paddingLeft: 0,
+              color: '#FFF'
+            }, },
+            { title: "Fecha de Creación", field: "bookingTime", type: "datetime" },
+            { title: "Dirección", field: "locationId.streetAddress" },
+            { title: "Precio", field: "bookingPrice", type: "numeric" }
           ]}
           data={bookings}
+          options={{
+            paging: false
+          }}
+   
         ></MaterialTable>
       </div>
     );

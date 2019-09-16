@@ -4,14 +4,15 @@ import axios from "axios";
 import { Button, Input, InputAdornment } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import PropTypes from "prop-types";
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom";
 
 export default class Login extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      isLoading: true
     };
   }
 
@@ -39,58 +40,64 @@ export default class Login extends Component {
         }
       )
       .then(response => {
-        alert("Sesión iniciada");
-        localStorage.setItem("token", response.data.sessionTokenBck)
-        localStorage.setItem("user",response.data)
-      <Redirect to="/BookingList" />
-            
-        localStorage.setItem("user_email", response.data.email)
-       
-/*   localStorage.setItem("user2", response.data.map( function(item,index))
- */ 
-
+        alert("Sesión iniciada")
+        this.props.userHasAuthenticated(true);
+        localStorage.setItem("token", response.data.sessionTokenBck);
+        localStorage.setItem("email", response.data.email);
+        this.setState({
+          isLoading: false
+        });
       })
       .catch(error => {
-        alert("ERROR" + error);
+        alert("Datos Errados" + error);
+        this.setState({ isLoading: false });
       });
-
   };
 
-
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <form onSubmit={this.submitHandler}>
-            <Input
-              name="email"
-              type="text"
-              color="primary"
-              placeholder="Enter Email"
-              onChange={this.changeHandler}
-              startAdornment={
-                <InputAdornment position="start">
-                  <AccountCircle />
-                </InputAdornment>
-              }
-            ></Input>
-            <br />
-            <Input
-              name="password"
-              type="password"
-              color="primary"
-              placeholder="Enter Password"
-              onChange={this.changeHandler}
-            ></Input>
-            <br />
-            <Button variant="contained" color="primary" type="submit">
-              LOGIN
-            </Button>
-          </form>
-        </header>
-      </div>
-    );
+    if (this.props.isAuthenticated) {
+      return <Redirect to="/BookingList" props= {this.props} />
+    } else {
+      return (
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <form onSubmit={this.submitHandler}>
+              <Input
+                name="email"
+                type="text"
+                color="primary"
+                placeholder="Enter Email"
+                onChange={this.changeHandler}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <AccountCircle />
+                  </InputAdornment>
+                }
+              ></Input>
+              <br />
+              <Input
+                name="password"
+                type="password"
+                color="primary"
+                placeholder="Enter Password"
+                onChange={this.changeHandler}
+              ></Input>
+              <br />
+
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={!this.validateForm()}
+              >
+                LOGIN
+              </Button>
+            </form>
+          </header>
+        </div>
+      );
+    }
   }
 }
 

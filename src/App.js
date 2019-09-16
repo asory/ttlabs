@@ -15,7 +15,7 @@ export default class App extends Component {
     this.setState({ isAuthenticated: authenticated });
   };
 
-  handleLogout = event => {
+  handleLogout= event => {
     this.userHasAuthenticated(false);
     this.localStorage.clear();
   };
@@ -23,16 +23,13 @@ export default class App extends Component {
   render() {
     const childProps = {
       isAuthenticated: this.state.isAuthenticated,
-      userHasAuthenticated: this.userHasAuthenticated
-    }
+      userHasAuthenticated: this.userHasAuthenticated,
+      handleLogout: this.handleLogout
+    };
     return (
       <div className="App">
-    
- <Routes childProps= {childProps} />
- </div>
+        <Routes childProps={childProps} />
+      </div>
     );
   }
-
- /*         <Login childProps={this.childProps}  />
- */
 }
