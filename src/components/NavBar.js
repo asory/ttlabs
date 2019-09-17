@@ -8,7 +8,7 @@ const NavBar= (props) =>{
       <AppBar position="static">
         <Toolbar>
           <Typography variant="h6" style={{ flexGrow: 1 }}>
-            Booking GRID {}
+            Welcome {}
           </Typography>
           <Link to="/">
             <Button color="secondary" onClick={props.handleLogout}>

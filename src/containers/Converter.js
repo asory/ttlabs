@@ -5,17 +5,24 @@ import TimeForm from "../components/TimeForm";
 export default class Converter extends Component {
   constructor(props) {
     super(props);
+
     this.state = {};
   }
 
   render() {
-    return (
-    <div className="App">
+    return(
+
+        <div>  
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
         <TimeForm />
         </header>
       </div>
+    
+    
     );
+    
+   
+
   }
 }

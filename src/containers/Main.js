@@ -14,16 +14,17 @@ export default class Main extends Component {
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
-        </header>
-        <div>
-          <Link to="/Utc">
-            <Button>TO UTC Converter</Button>
+
+          <Link to="/utc">
+            <Button variant="outlined" 
+                color="primary">TO UTC Converter</Button>
           </Link>
 
           <Link to="/Login">
-            <Button>To TUTEN LOGIN </Button>
+            <Button variant="outlined" 
+                color="primary">To TUTEN LOGIN </Button>
           </Link>
-        </div>
+        </header>
       </div>
     );
   }

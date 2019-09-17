@@ -6,7 +6,7 @@ import SwapVert from "@material-ui/icons/SwapVert";
 import Clear from "@material-ui/icons/Clear";
 import FilterList from "@material-ui/icons/FilterList";
 import Search from "@material-ui/icons/Search";
-import Moment from 'moment';
+import { format } from "date-fns";
 
 const tableIcons = {
   Filter: () => <FilterList />,
@@ -19,7 +19,11 @@ const tableIcons = {
 class BookingList extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { bookings: [], user: "", isLoading: true, error: false };
+    this.state = {
+      bookings: {},
+      isLoading: true,
+      error: false
+    };
   }
 
   loadData = () => {
@@ -35,7 +39,7 @@ class BookingList extends React.Component {
             app: "APP_BCK",
             adminemail: localStorage.getItem("email")
           }
-        },
+        }
       )
       .then(response => {
         this.setState({
@@ -57,12 +61,10 @@ class BookingList extends React.Component {
     this.setState({ user });
     this.loadData();
   }
-  
-  
 
   render() {
     const { isLoading, error, bookings } = this.state;
-  
+
     if (isLoading) {
       return <h1>Loading ...</h1>;
     }
@@ -77,49 +79,41 @@ class BookingList extends React.Component {
         </div>
       );
     }
-    
-    
-      return (
-        <div>
-          <NavBar props={this.props} />
-          <MaterialTable
-            icons={tableIcons}
-            title="Bookings "
-            columns={[
-              { title: "BookingID", field: "bookingId" },
-              {
-                title: "Cliente",
-                field: "tutenUserClient.firstName",
-                cellStyle: {
-                  paddingRight: 0,
-                  marginRight: 0
-                }
-              },
-              {
-                title: " ",
-                field: "tutenUserClient.lastName",
-                cellStyle: {
-                  paddingLeft: 0, marginLeft: 0,
-                }
-              },
-              {
-                title: "Fecha de Creación",
-                field: "bookingTime",
-                type: "datetime"
-              },
-              { title: "Dirección", field: "locationId.streetAddress" },
-              { title: "Precio", field: "bookingPrice", type: "numeric" }
-            ]}
-            data={bookings}
-            options={{
-              paging: false,
-              draggable: false
-            }}
-          ></MaterialTable>
-          
-        </div>
-      );
-    
+    return (
+      <div>
+        <NavBar props={this.props} />
+        <MaterialTable
+          icons={tableIcons}
+          title="Bookings "
+          columns={[
+            { title: "BookingID", field: "bookingId" },
+            {
+              title: "Cliente",
+              field: "tutenUserClient.firstName",
+              render: rowData =>
+                `${rowData.tutenUserClient.firstName} ${rowData.tutenUserClient.lastName}`
+            },
+            {
+              title: "Fecha de Creación",
+              field: "bookingTime",
+              type: "datetime",
+              render: rowData =>
+                format(
+                  new Date(parseInt(rowData.bookingTime)),
+                  "HH:mm dd/yyyy "
+                )
+            },
+            { title: "Dirección", field: "locationId.streetAddress" },
+            { title: "Precio", field: "bookingPrice", type: "numeric" }
+          ]}
+          data={bookings}
+          options={{
+            paging: false,
+            draggable: false
+          }}
+        ></MaterialTable>
+      </div>
+    );
   }
 }
 

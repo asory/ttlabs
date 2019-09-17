@@ -12,7 +12,7 @@ export default ({ childProps }) =>
     <CustomRoute path="/" exact component={Main} props={childProps} />
     <CustomRoute path="/Login" exact component={Login} props={childProps} />
     <CustomRoute path="/BookingList" exact component={BookingList} props={childProps} />
-    <CustomRoute path="/Utc" exact component={Converter}/>
+    <CustomRoute path="/utc" exact component={Converter}/>
     <CustomRoute component={NotFound} />
   </Switch>;
 

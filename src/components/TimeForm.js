@@ -1,8 +1,9 @@
 import React, { Component } from "react";
-import Axios from "axios";
 import { Button, Input } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
-import 'date-fns';
+import { format } from "date-fns";
+import axios from "axios";
+import { Link } from "react-router-dom";
 
 import {
   MuiPickersUtilsProvider,
@@ -22,22 +23,31 @@ export default class TimeForm extends Component {
   changeHandler = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
+  handleDateChange = time => {
+    this.setState({ time: time });
+  };
+  validateForm() {
+    return this.state.timezone.length > 0;
+  }
 
+  submitHandler = e => {
+    console.log("RESULTS HERE:", this.state.time);
 
-  submitHandler = () => {
-    Axios.post(
-      "https://frozen-crag-41915.herokuapp.com/utc",
-      { time: this.time, timezone: this.state.timezone },
+    console.log("RESULTS HERasdasE:", format(this.state.time, "HH:mm"));
 
-      {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
+    axios
+      .post(
+        "https://frozen-crag-41915.herokuapp.com/utc",
+        { time: this.state.time, timezone: this.state.timezone },
+
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json"
+          }
         }
-      }
-    )
+      )
 
-      .then(response => response.json())
       .then(responseData => {
         console.log("RESULTS HERE:", responseData);
         alert(
@@ -53,58 +63,45 @@ export default class TimeForm extends Component {
   };
 
   render() {
-    const { time, timezone } = this.state;
     return (
       <div>
         <form onSubmit={this.submitHandler}>
           <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <Input
-              name={timezone}
-              placeholder="Timezone"
-              placeholderColor="1e90ff"
-              style={styles.input}
-              type="numeric"
-              ref={input => (this.timezone = input)}
-            />
-
             <KeyboardTimePicker
-              name={time}
+              name="time"
               margin="normal"
-              id="time-picker"
-              label="Time picker"
-              value={time}
-              onChange={this.changeHandler}
+              value={this.time}
+              format="HH:mm"
+              onChange={this.handleDateChange}
               KeyboardButtonProps={{
                 "aria-label": "change time"
               }}
             />
+            <div>
+              <Input
+                name="timezone"
+                placeholder="set Timezone"
+                type="numeric"
+                onChange={this.changeHandler}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                disabled={!this.validateForm()}
+              > GET UTC HOUR
+              </Button>
+            </div>
           </MuiPickersUtilsProvider>
-
-          <Button style={styles.button} type="submit">
-            <h1 style={styles.buttonText}>TO UTC</h1>
-          </Button>
         </form>
+        <div>
+          <Link to="/">
+            <Button variant="contained" color="primary">
+              SALIR
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
 }
-const styles = StyleSheet.create({
-  input: {
-    padding: 10,
-    height: 60,
-    alignSelf: "stretch",
-    fontSize: 20,
-    borderBottomWidth: 2
-  },
-
-  button: {
-    height: 60,
-    width: 200,
-    borderRadius: 40,
-    borderWidth: 5,
-    alignContent: "center"
-  },
-  buttonText: {
-    alignSelf: "center"
-  }
-});
