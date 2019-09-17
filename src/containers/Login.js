@@ -4,7 +4,7 @@ import axios from "axios";
 import { Button, Input, InputAdornment } from "@material-ui/core";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import PropTypes from "prop-types";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 export default class Login extends Component {
   constructor(props) {

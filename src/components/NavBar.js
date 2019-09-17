@@ -11,7 +11,7 @@ const NavBar= (props) =>{
             Booking GRID {}
           </Typography>
           <Link to="/">
-            <Button color="primary" onClick={props.handleLogout}>
+            <Button color="secondary" onClick={props.handleLogout}>
               Logout
             </Button>
           </Link>

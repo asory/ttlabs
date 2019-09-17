@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
 import Routes from "./Routes";
-import Login from "./containers/Login";
 
 export default class App extends Component {
   constructor(props) {
